@@ -2,18 +2,20 @@
 
 ## What is Spaced Repetition?
 
-Spaced Repetition is a learning method. The method is based on repeating/reviewing a content (usually a flashcard) at certain time intervals to consolidate it in the long-term memory. The brain can better remember content that is repeated over a longer period of time.
+Spaced Repetition is a learning method. The method is based on repeating/reviewing a learning unit (usually a flashcard) at certain time intervals to consolidate it in the long-term memory. The brain can better remember content that is repeated over a long period of time.
 
-** Terms**
+**Terms**
 - Learning Unit: Something that should be learned (often a flashcard)
 - Review: The act of „learning“ a unit
-- Evaluation: Information about the review (for example: difficulty or lateness of the review)
+- Evaluation: Information about the review (for example: difficulty or lateness)
 
-## How do the Spaced Repetition algorithms work?
+Tipp - The following webpage provides an interactive webcomic about spaced repetition: https://ncase.me/remember/
+
+## How do Spaced Repetition Algorithms work?
 
 ![](Documentation/spaced_repetition_algorithms_overview.png)
 
-Spaced repetition algorithms are often used in flashcard apps. The algorithms calculate how long the optimal time interval between a learning unit and the next learning unit for a piece of information should be. The calculation is based on the user's feedback on how easy or difficult the last "review" was perceived. Normally, the time interval increases the more often a learning unit has been successfully recalled. Frequent repetitions cause the memory curve to decrease slower. If a learning content cannot be recalled, the time intervals between learning reviews will become shorter again.
+Spaced repetition algorithms are often used in flashcard apps. The algorithms calculate how long the optimal time interval between two reviews for a learning unit should be. The calculation is based on the user's feedback on how easy or difficult the last review was perceived. Normally, the time interval increases the more often a learning unit has been successfully recalled. Frequent repetitions cause the memory curve to decrease slower. If a learning content cannot be recalled, the time intervals between reviews will become shorter again.
 
 
 ## How to use this package
@@ -25,8 +27,7 @@ Here is how you can use the algorithms:
 First, the user has to „review“ the information / flashcard. Based on the performance of the user, an `evaulation`-object can be created:
 
 ```swift
-let firstUserScore = Score.recalled_easily //how well did the user recall the information during the last review? (choose between "recalled_easily", "recalled", "recalled_but_difficult", "not_recalled" and "not_recalled_and_difficult")
-
+let firstUserScore = Score.recalled_easily //how well did the user recall the information during the last review?
 let firstEvaluation = Evaluation(score: firstUserScore)
 ```
 
@@ -40,34 +41,29 @@ Using the information from the evaluation, the interval can be calculated:
 
 ```swift
 let firstReview = spacedRepetitionAlgorithm.nextReview(currentEvaluation: firstEvaluation)
-
 print(firstReview.intervalDays) //prints "4"
 ```
 
-An interval of „4“ means the algorithm proposes that the same learning-unit should be reviewed again in 4 days.
+An interval of „4“ means the algorithm proposes that the same learning unit should be reviewed again in 4 days.
 
-Imagine, the actual review will happen after 5 days. Let’s calculate how long the next interval should be:
+Imagine, that the actual review happens after 5 days. Let’s calculate how long the next interval should be:
 
 ```swift
-let lateness = 1.0 //how many days was the learning unit reviewed "too late" (compared to the last proposed interval). For example: If the algorithm proposes that the information is reviewed again in 4 days after the last review but the actual review happens 5 days after the last review, the lateness is 1. A negative lateness-value means the the information was reviewed too early. For example, choose a lateness of -2 if the information was reviewed 2 days after the last review instead of 4.
-
+let lateness = 1.0 //how many days was the learning unit reviewed "too late" (compared to the last proposed interval). For example: If the algorithm proposes that the information is reviewed again in 4 days after the last review but the actual review happens 5 days after the last review, the lateness is 1. A negative lateness-value means the the information was reviewed too early. For example, choose a lateness of -2 if the learning unit was reviewed 2 days after the last review instead of 4 days.
 let secondUserScore = Score.not_recalled //ooops... let's say the user did not recall the learning unit
-
 let secondEvaluation = Evaluation(score: secondUserScore, lateness: lateness) 
-
 let secondReview = spacedRepetitionAlgorithm.nextReview(lastReview: firstReview, currentEvaluation: secondEvaluation)
 
-print(secondReview.intervalDays) //prints "0.000694" (= 1 minute
-)
+print(secondReview.intervalDays) //prints "0.000694" (= 1 minute)
 ```
 
-Note that many algorithms internally use an ease-factor to rate the difficulty of a card:
+Note that many algorithms internally use an ease-factor to rate the difficulty of a learning unit:
 
 ```swift
 print(secondReview.easeFactor) //usually between 1 and 2.5
 ```
 
-An ease factor of 2.5 means that a learning unit is considered easy, while an ease factor of 1.3 or lower means that a flashcard or information is considered to be very hard to recall.
+An ease factor of 2.5 means that a learning unit is considered easy, while an ease factor of 1.3 or lower means that a learning unit is considered to be very hard to recall.
 
 ## Which Spaced Repetition Algorithms are included in this Package?
 
@@ -104,7 +100,7 @@ let Review nextReview = spacedRepetitionAlgorithm.nextReview(lastReview: review,
 
 ### Fresh Cards Algorithm
 
-This algorithm is used for the app „flashcards“. It works similar like the Anki- and the SuperMemo2 algorithms. In addition, the lateness or earliness of a review is considered during the calculation of the next interval. The algorithm considers that it is easier to recall a learning unit if it is reviewed too early and more difficult if it is reviewed too late.
+This algorithm is used for the app „flashcards“. It works similar like the Anki- and the SuperMemo2-algorithms. In addition, the lateness or earliness of a review is considered during the calculation of the next interval. The algorithm considers that it is easier to recall a learning unit if it is reviewed too early and more difficult if it is reviewed too late.
 
 Again, a bit of randomness is included to prevent that multiple flashcards get bunched together.
 
