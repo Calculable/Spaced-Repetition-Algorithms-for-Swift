@@ -33,14 +33,14 @@ struct FreshCards: SpacedRepetitionAlgorithm {
                         let latenessFactor = min(1.0, currentEvaluation.lateness)
                         
                         // Score factor can range from 1.0 to 1.5
-                        let scoreFactor = 1.0 + (Double(currentEvaluation.score.rawValue) - 3.0) / 4.0
+                        let scoreFactor = 1.0 + (currentEvaluation.scoreValue - 3.0) / 4.0
                         
                         
                         // Bonus can range from 0.0 to 1.0.
                         latenessScoreBonus = 1.0 * latenessFactor * scoreFactor
                     }
                     
-                    let adjustedScore = latenessScoreBonus + Double(currentEvaluation.score.rawValue)
+                    let adjustedScore = latenessScoreBonus + currentEvaluation.scoreValue
                     return max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - adjustedScore) * (0.08+(5 - adjustedScore)*0.02)))
                 
                 } else {
@@ -59,7 +59,7 @@ struct FreshCards: SpacedRepetitionAlgorithm {
                     // future, using the weighting function. Essentially, if you reviewed 5.0 today, we will
                     // decay that score down to a minimum of 3.0 in the future. Something easily remembered
                     // now may not be easily remembered in the future.
-                    let predictedFutureScore = currentWeight * Double(currentEvaluation.score.rawValue) + futureWeight * 3.0
+                    let predictedFutureScore = currentWeight * currentEvaluation.scoreValue + futureWeight * 3.0
                     
                     // Compute the future efactor and interval using the future score
                     let futureEfactor = max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - predictedFutureScore) * (0.08+(5 - predictedFutureScore)*0.02)))
@@ -95,7 +95,7 @@ struct FreshCards: SpacedRepetitionAlgorithm {
             
             if (addFuzzyness) {
                 // Add 10% "fuzz" to interval to avoid bunching up reviews
-                interval = interval * (1.0 + Double.random(in: 0..<1) * 0.10)
+                interval = addFuzz(originalValue: interval, fuzzFactor: 0.1)
             }
         } else {
             // Reviewing phase
@@ -116,11 +116,11 @@ struct FreshCards: SpacedRepetitionAlgorithm {
                     
                     var intervalAdjustment = 1.0
                     
-                    if !(currentEvaluation.lateness >= 0.10 && Double(currentEvaluation.score.rawValue) >= 3.0) {
+                    if !(currentEvaluation.lateness >= 0.10 && currentEvaluation.scoreValue >= 3.0) {
                     
                     // Card wasn't late, so adjust differently
                         
-                        if (currentEvaluation.score.wasRecalled() && currentEvaluation.score.rawValue < 4) {
+                        if (currentEvaluation.score.wasRecalled() && currentEvaluation.scoreValue < 4) {
                             // hard card, so adjust interval slightly
                             intervalAdjustment = 0.8
                         }
@@ -164,10 +164,10 @@ struct FreshCards: SpacedRepetitionAlgorithm {
                     // future, using the weighting function. Essentially, if you reviewed 5.0 today, we will
                     // decay that score down to a minimum of 3.0 in the future. Something easily remembered
                     // now may not be easily remembered in the future.
-                    let predictedFutureScore = currentWeight * Double(currentEvaluation.score.rawValue) + futureWeight * 3.0
+                    let predictedFutureScore = currentWeight * currentEvaluation.scoreValue + futureWeight * 3.0
                     
                     // Compute the future efactor and interval using the future score
-                    let futureEfactor = max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - predictedFutureScore) * (0.08+(5 - predictedFutureScore)*0.02)))
+                    let futureEfactor = max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - predictedFutureScore) * (0.08 + (5 - predictedFutureScore)*0.02)))
                     var futureInterval: Double
                     
                     // Figure out interval. First review is in 1d, then 6d, then based on efactor and previous interval.
@@ -187,7 +187,7 @@ struct FreshCards: SpacedRepetitionAlgorithm {
                 
                 if (addFuzzyness) {
                     // Add 5% "fuzz" to interval to avoid bunching up reviews
-                    interval = interval * (1.0 + Double.random(in: 0..<1) * 0.05)
+                    interval = addFuzz(originalValue: interval, fuzzFactor: 0.05)
                 }
 
             }
@@ -196,6 +196,10 @@ struct FreshCards: SpacedRepetitionAlgorithm {
         return interval
     
     
+    }
+    
+    private func addFuzz(originalValue: Double, fuzzFactor: Double) -> Double {
+        return originalValue * (1.0 + Double.random(in: 0..<1) * fuzzFactor)
     }
     
     

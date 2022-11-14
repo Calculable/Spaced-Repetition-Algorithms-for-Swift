@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+func daysFromMinutes(minutes: Double) -> Double {
+    return minutes / (24.0 * 60.0)
+}
+

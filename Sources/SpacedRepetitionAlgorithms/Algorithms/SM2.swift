@@ -4,7 +4,7 @@ import Foundation
 struct SM2: SpacedRepetitionAlgorithm {
     
     internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
-        let currentScore = Double(currentEvaluation.score.rawValue)
+        let currentScore = currentEvaluation.scoreValue
         let calculatedEaseFactor: Double = lastReview.easeFactor + (0.1 - (5 - currentScore) * (0.08+(5 - currentScore)*0.02))
         return max(EaseFactors.veryDifficult, calculatedEaseFactor)
     }

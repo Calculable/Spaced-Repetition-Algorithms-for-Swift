@@ -29,126 +29,119 @@ import Foundation
 *   reviewed together as a group
 */
 struct AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
-    
-    static let defaultReview = Review(intervalDays: 1, numberOfCorrectReviewsInARow: 0, easeFactor: EaseFactors.defaultEaseFactor) //shouldn't the interval be 1.0 to be consistent with the other algorithms?
-    
+        
     let addFuzzyness: Bool
 
     init(addFuzzyness: Bool = false) {
         self.addFuzzyness = addFuzzyness
     }
     
-    private func daysFromMinutes(minutes: Double) -> Double {
-        return minutes / (24.0 * 60.0)
-    }
-    
     // Compute amount of fuzz to apply to an interval to avoid bunching up reviews on the same cards.
     private func fuzzForInterval(interval: Double) -> Double {
         var fuzzRange: Double
-        if (interval < 2) {
+        
+        switch interval {
+        case ..<2:
             fuzzRange = 0
-        } else if (interval == 2) {
+        case 2:
             fuzzRange = 1
-        } else if (interval < 7) {
+        case ..<7:
             fuzzRange = round(interval * 0.25)
-        } else if (interval < 30) {
+        case ..<30:
             fuzzRange = max(2, round(interval * 0.25))
-        } else {
+        default:
             fuzzRange = max(4, round(interval * 0.05))
         }
         
         return Double.random(in: 0..<1) * fuzzRange - fuzzRange * 0.5
     }
     
-    internal func nextReviewEaseFactor(lastReview: Review = defaultReview, currentEvaluation: Evaluation) -> Double {
+    internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
 
-        if (lastReview.numberOfCorrectReviewsInARow <= 2) {
-            // Still in learning phase, so do not change efactor
+        if (lastReview.numberOfCorrectReviewsInARow <= 2) { // Still in learning phase, so do not change efactor
             return lastReview.easeFactor
         }
         
         // Reviewing phase
-        if (!currentEvaluation.score.wasRecalled()) {
-            // Reduce efactor
+        if (currentEvaluation.score.wasRecalled()) {
+            return max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - currentEvaluation.scoreValue) * (0.08+(5 - currentEvaluation.scoreValue)*0.02)))
+        } else {
+            //passed
             return max(EaseFactors.veryDifficult, lastReview.easeFactor - 0.20)
         }
         
-        // Passed
-        return max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - Double(currentEvaluation.score.rawValue)) * (0.08+(5 - Double(currentEvaluation.score.rawValue))*0.02)))
+        
+        
     }
     
     
-    internal func nextReviewInterval(lastReview: Review = defaultReview, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
-
-        var interval: Double
+    fileprivate func nextReviewIntervalForLearningPhase(_ currentEvaluation: Evaluation, _ lastReview: Review) -> Double {
+        // Still in learning phase
         
-        if (lastReview.numberOfCorrectReviewsInARow <= 2) {
-            // Still in learning phase
-            
-            // if did failed card, reset n and interval
-            if (!currentEvaluation.score.wasRecalled()) {
-                // Due in 1minute
-                interval = 1.0/(24.0*60.0)
-            } else if (currentEvaluation.score.rawValue < 5) {
-                
-                // first interval = 1min
-                // second interval = 10min
-                // third interval = 24h
-                
-                if (lastReview.numberOfCorrectReviewsInARow == 0) {
-                    interval = daysFromMinutes(minutes: 1.0)
-                } else if (lastReview.numberOfCorrectReviewsInARow == 1) {
-                    interval = daysFromMinutes(minutes: 10.0)
-                } else {
-                    interval = 1.0
-                }
-            } else {
-                interval = 4.0
-            }
-        } else {
-            // Reviewing phase
-            if (currentEvaluation.score.rawValue < 3) {
-                // Failed, so reset interval to 1m
-                interval = daysFromMinutes(minutes: 1.0)
-            } else {
-                // Passed
-                let latenessDays = max(0, currentEvaluation.lateness * lastReview.intervalDays)
-                var latenessBonus = 0.0
-                if (latenessDays > 0) {
-                    if (currentEvaluation.score.rawValue >= 5) {
-                        latenessBonus = latenessDays
-                    } else if (currentEvaluation.score.rawValue >= 4) {
-                        latenessBonus = latenessDays / 2.0
-                    } else {
-                        latenessBonus = latenessDays / 4.0
-                    }
-                }
-                
-                var workingEfactor = easeFactor
-                
-                if (currentEvaluation.score.rawValue >= 3 && currentEvaluation.score.rawValue < 4) {
-                    // hard card. increase interval by 1.2 instead of whatever efactor was
-                    interval = ceil(lastReview.intervalDays * 1.2) //redundant, evt. nachfragen
-                    
-                    // ding score since this was hard
-                    workingEfactor = max(EaseFactors.veryDifficult, workingEfactor - 0.15)
-                } else if (currentEvaluation.score.rawValue >= 5) {
-                    // easy card, so give bonus to workingEfactor
-                    workingEfactor = max(1.3, workingEfactor + 0.15)
-                }
-                
-                interval = ceil((lastReview.intervalDays + latenessBonus) * workingEfactor)
-                
-                
-                if (addFuzzyness) {
-                    // Add some proportional "fuzz" to interval to avoid bunching up reviews
-                    interval += fuzzForInterval(interval: interval)
-                }
-
+        // if did failed card, reset n and interval
+        if (!currentEvaluation.score.wasRecalled()) {
+            // Due in 1minute
+            return daysFromMinutes(minutes: 1)
+        }
+        
+        if (currentEvaluation.scoreValue < 5) {
+            switch lastReview.numberOfCorrectReviewsInARow {
+            case 0: return daysFromMinutes(minutes: 1.0)
+            case 1: return daysFromMinutes(minutes: 10.0)
+            default: return 1.0
             }
         }
         
+        return 4.0
+    }
+    
+    fileprivate func latenessBonus(_ currentEvaluation: Evaluation, _ lastReview: Review) -> Double {
+        let latenessValue = max(0, currentEvaluation.lateness * lastReview.intervalDays)
+        
+        switch currentEvaluation.score.rawValue {
+            case 5: return latenessValue
+            case 4: return latenessValue / 2.0
+            default: return latenessValue / 4.0
+        }
+    }
+    
+    fileprivate func calculateWorkingEFactor(_ score: Score, _ easeFactor: Double) -> Double {
+        switch score.rawValue {
+        case 3: return max(EaseFactors.veryDifficult, easeFactor - 0.15)
+        case 5: return max(1.3, easeFactor + 0.15)
+        default: return easeFactor
+        }
+    }
+    
+    
+    fileprivate func nextReviewIntervalForReviewingPhase(_ currentEvaluation: Evaluation, _ lastReview: Review, _ easeFactor: Double) -> Double {
+        
+        if (!currentEvaluation.score.wasRecalled()) {
+            return daysFromMinutes(minutes: 1.0) // Failed, so reset interval to 1m
+        }
+
+        let latenessBonus = latenessBonus(currentEvaluation, lastReview)
+        let workingEfactor = calculateWorkingEFactor(currentEvaluation.score, easeFactor)
+        var interval = ceil((lastReview.intervalDays + latenessBonus) * workingEfactor)
+            
+        if (addFuzzyness) {
+            // Add some proportional "fuzz" to interval to avoid bunching up reviews
+            interval += fuzzForInterval(interval: interval)
+        }
+            
         return interval
+            
+    }
+    
+    internal func nextReviewInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+
+        
+        if (lastReview.numberOfCorrectReviewsInARow <= 2) {
+            return nextReviewIntervalForLearningPhase(currentEvaluation, lastReview)
+        } else {
+            return nextReviewIntervalForReviewingPhase(currentEvaluation, lastReview, easeFactor)
+        }
+        
         
         
     }

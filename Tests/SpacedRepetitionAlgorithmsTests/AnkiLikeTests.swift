@@ -14,28 +14,6 @@ final class AnkiLikeTests: XCTestCase {
         subject = nil
     }
     
-    func testHelloWorld() {
-        let firstUserScore = Score.recalled_easily //how well did the user recall the information during the last review? (choose between "recalled_easily", "recalled", "recalled_but_difficult", "not_recalled" and "not_recalled_and_difficult")
-
-        let firstEvaluation = Evaluation(score: firstUserScore)
-        
-        let spacedRepetitionAlgorithm = AnkiLikeAlgorithm() //choose between different algorithms, see below
-        
-        let firstReview = spacedRepetitionAlgorithm.nextReview(currentEvaluation: firstEvaluation)
-
-        print(firstReview.intervalDays) //prints "4"
-        
-        let lateness = 1.0 //how many days was the information reviewed "too late" (compared to the last proposed interval). For example: If the algorithm proposes that the information is reviewed again in 4 days after the last review but the actual review happens 5 days after the last review, the lateness is 1. A negative lateness-value means the the information was reviewed too early. For example, choose a lateness of -2 if the information was reviewed again 2 days after the last review instead of 4.
-
-        let secondUserScore = Score.not_recalled
-
-        let secondEvaluation = Evaluation(score: secondUserScore, lateness: lateness)
-
-        let secondReview = spacedRepetitionAlgorithm.nextReview(lastReview: firstReview, currentEvaluation: secondEvaluation)
-
-        print(secondReview.intervalDays) //prints "4"
-    }
-    
     func testTypicalSchedule() {
         let evaluation1 = Evaluation(score: Score.recalled_but_difficult)
         let review1 = subject.nextReview(currentEvaluation: evaluation1)

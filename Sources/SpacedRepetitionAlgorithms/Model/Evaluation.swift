@@ -4,6 +4,10 @@ struct Evaluation {
     /// how well was the information recalled?
     let score: Score
     
+    var scoreValue: Double {
+        return Double(score.rawValue)
+    }
+    
     /// how many days was the actual evaluation later than the proposed evaluation?
     let lateness: Double
     
