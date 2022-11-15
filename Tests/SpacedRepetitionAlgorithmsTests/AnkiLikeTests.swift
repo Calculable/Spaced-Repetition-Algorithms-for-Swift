@@ -37,49 +37,49 @@ final class AnkiLikeTests: XCTestCase {
         let review4 = subject.nextReview(lastReview: review3, currentEvaluation: evaluation4)
         XCTAssertEqual(review4.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review4.numberOfCorrectReviewsInARow, 4)
-        XCTAssertEqual(review4.intervalDays, 9, accuracy: 0.01)
+        XCTAssertEqual(review4.intervalDays, 5, accuracy: 0.01)
 
         let evaluation5 = Evaluation(score: Score.recalled)
         let review5 = subject.nextReview(lastReview: review4, currentEvaluation: evaluation5)
         XCTAssertEqual(review5.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review5.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review5.intervalDays, 22, accuracy: 0.01)
+        XCTAssertEqual(review5.intervalDays, 12, accuracy: 0.01)
 
         let evaluation6 = Evaluation(score: Score.recalled_but_difficult)
         let review6 = subject.nextReview(lastReview: review5, currentEvaluation: evaluation6)
         XCTAssertEqual(review6.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review6.numberOfCorrectReviewsInARow, 6)
-        XCTAssertEqual(review6.intervalDays, 46, accuracy: 0.01)
+        XCTAssertEqual(review6.intervalDays, 15, accuracy: 0.01)
 
         let evaluation7 = Evaluation(score: Score.recalled)
         let review7 = subject.nextReview(lastReview: review6, currentEvaluation: evaluation7)
         XCTAssertEqual(review7.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review7.numberOfCorrectReviewsInARow, 7)
-        XCTAssertEqual(review7.intervalDays, 103, accuracy: 0.01)
+        XCTAssertEqual(review7.intervalDays, 34, accuracy: 0.01)
 
         let evaluation8 = Evaluation(score: Score.recalled)
         let review8 = subject.nextReview(lastReview: review7, currentEvaluation: evaluation8)
         XCTAssertEqual(review8.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
-        XCTAssertEqual(review8.intervalDays, 229, accuracy: 0.01)
+        XCTAssertEqual(review8.intervalDays, 76, accuracy: 0.01)
 
         let evaluation9 = Evaluation(score: Score.recalled_but_difficult)
         let review9 = subject.nextReview(lastReview: review8, currentEvaluation: evaluation9)
         XCTAssertEqual(review9.easeFactor, 2.08, accuracy: 0.005)
         XCTAssertEqual(review9.numberOfCorrectReviewsInARow, 9)
-        XCTAssertEqual(review9.intervalDays, 442, accuracy: 0.01)
+        XCTAssertEqual(review9.intervalDays, 92, accuracy: 0.01)
 
         let evaluation10 = Evaluation(score: Score.recalled)
         let review10 = subject.nextReview(lastReview: review9, currentEvaluation: evaluation10)
         XCTAssertEqual(review10.easeFactor, 2.08, accuracy: 0.005)
         XCTAssertEqual(review10.numberOfCorrectReviewsInARow, 10)
-        XCTAssertEqual(review10.intervalDays, 920, accuracy: 0.01)
+        XCTAssertEqual(review10.intervalDays, 192, accuracy: 0.01)
 
         let evaluation11 = Evaluation(score: Score.recalled_but_difficult)
         let review11 = subject.nextReview(lastReview: review10, currentEvaluation: evaluation11)
         XCTAssertEqual(review11.easeFactor, 1.94, accuracy: 0.005)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
-        XCTAssertEqual(review11.intervalDays, 1647, accuracy: 0.01)
+        XCTAssertEqual(review11.intervalDays, 231, accuracy: 0.01)
 
 
     }
@@ -114,7 +114,7 @@ final class AnkiLikeTests: XCTestCase {
         let review5 = subject.nextReview(lastReview: review4, currentEvaluation: evaluation5)
         XCTAssertEqual(review5.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review5.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review5.intervalDays, 23.0, accuracy: 0.01)
+        XCTAssertEqual(review5.intervalDays, 12, accuracy: 0.01)
 
         let evaluation6 = Evaluation(score: Score.not_recalled)
         let review6 = subject.nextReview(lastReview: review5, currentEvaluation: evaluation6)
@@ -194,13 +194,13 @@ final class AnkiLikeTests: XCTestCase {
         let review9 = subject.nextReview(lastReview: review8, currentEvaluation: evaluation9)
         XCTAssertEqual(review9.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review9.numberOfCorrectReviewsInARow, 4)
-        XCTAssertEqual(review9.intervalDays, 3.0, accuracy: 0.01)
+        XCTAssertEqual(review9.intervalDays, 2, accuracy: 0.01)
 
         let evaluation10 = Evaluation(score: Score.recalled_but_difficult)
         let review10 = subject.nextReview(lastReview: review9, currentEvaluation: evaluation10)
         XCTAssertEqual(review10.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review10.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review10.intervalDays, 7.0, accuracy: 0.01)
+        XCTAssertEqual(review10.intervalDays, 3, accuracy: 0.01)
     }
     
     func testScheduleWhereCardsAreReviewedLateButGotItRight() {
@@ -226,49 +226,49 @@ final class AnkiLikeTests: XCTestCase {
         let review4 = subject.nextReview(lastReview: review3, currentEvaluation: evaluation4)
         XCTAssertEqual(review4.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review4.numberOfCorrectReviewsInARow, 4)
-        XCTAssertEqual(review4.intervalDays, 14.0, accuracy: 0.01)
+        XCTAssertEqual(review4.intervalDays, 5, accuracy: 0.01)
         
         let evaluation5 = Evaluation(score: Score.recalled, lateness: 8)
         let review5 = subject.nextReview(lastReview: review4, currentEvaluation: evaluation5)
         XCTAssertEqual(review5.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review5.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review5.intervalDays, 166, accuracy: 0.01)
+        XCTAssertEqual(review5.intervalDays, 59, accuracy: 0.01)
 
         let evaluation6 = Evaluation(score: Score.recalled_but_difficult)
         let review6 = subject.nextReview(lastReview: review5, currentEvaluation: evaluation6)
         XCTAssertEqual(review6.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review6.numberOfCorrectReviewsInARow, 6)
-        XCTAssertEqual(review6.intervalDays, 344, accuracy: 0.01)
+        XCTAssertEqual(review6.intervalDays, 71, accuracy: 0.01)
 
         let evaluation7 = Evaluation(score: Score.recalled, lateness: 8)
         let review7 = subject.nextReview(lastReview: review6, currentEvaluation: evaluation7)
         XCTAssertEqual(review7.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review7.numberOfCorrectReviewsInARow, 7)
-        XCTAssertEqual(review7.intervalDays, 3819, accuracy: 0.01)
+        XCTAssertEqual(review7.intervalDays, 789, accuracy: 0.01)
 
         let evaluation8 = Evaluation(score: Score.recalled)
         let review8 = subject.nextReview(lastReview: review7, currentEvaluation: evaluation8)
         XCTAssertEqual(review8.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
-        XCTAssertEqual(review8.intervalDays, 8479, accuracy: 0.01)
+        XCTAssertEqual(review8.intervalDays, 1752, accuracy: 0.01)
 
         let evaluation9 = Evaluation(score: Score.recalled_but_difficult)
         let review9 = subject.nextReview(lastReview: review8, currentEvaluation: evaluation9)
         XCTAssertEqual(review9.easeFactor, 2.08, accuracy: 0.005)
         XCTAssertEqual(review9.numberOfCorrectReviewsInARow, 9)
-        XCTAssertEqual(review9.intervalDays, 16365, accuracy: 0.01)
+        XCTAssertEqual(review9.intervalDays, 2103, accuracy: 0.01)
 
         let evaluation10 = Evaluation(score: Score.recalled)
         let review10 = subject.nextReview(lastReview: review9, currentEvaluation: evaluation10)
         XCTAssertEqual(review10.easeFactor, 2.08, accuracy: 0.005)
         XCTAssertEqual(review10.numberOfCorrectReviewsInARow, 10)
-        XCTAssertEqual(review10.intervalDays, 34040, accuracy: 0.01)
+        XCTAssertEqual(review10.intervalDays, 4375, accuracy: 0.01)
 
         let evaluation11 = Evaluation(score: Score.recalled_but_difficult)
         let review11 = subject.nextReview(lastReview: review10, currentEvaluation: evaluation11)
         XCTAssertEqual(review11.easeFactor, 1.94, accuracy: 0.005)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
-        XCTAssertEqual(review11.intervalDays, 60932, accuracy: 0.01)
+        XCTAssertEqual(review11.intervalDays, 5250, accuracy: 0.01)
 
     }
     
@@ -313,7 +313,7 @@ final class AnkiLikeTests: XCTestCase {
         let review7 = subject.nextReview(lastReview: review6, currentEvaluation: evaluation7)
         XCTAssertEqual(review7.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review7.numberOfCorrectReviewsInARow, 7)
-        XCTAssertEqual(review7.intervalDays, 45.0, accuracy: 0.01)
+        XCTAssertEqual(review7.intervalDays, 24, accuracy: 0.01)
     }
     
     func testScheduleWhereInitialReviewsAreDoneLate() {
@@ -345,25 +345,25 @@ final class AnkiLikeTests: XCTestCase {
         let review5 = subject.nextReview(lastReview: review4, currentEvaluation: evaluation5)
         XCTAssertEqual(review5.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review5.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review5.intervalDays, 7.0, accuracy: 0.01)
+        XCTAssertEqual(review5.intervalDays, 4, accuracy: 0.01)
 
         let evaluation6 = Evaluation(score: Score.recalled)
         let review6 = subject.nextReview(lastReview: review5, currentEvaluation: evaluation6)
         XCTAssertEqual(review6.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review6.numberOfCorrectReviewsInARow, 6)
-        XCTAssertEqual(review6.intervalDays, 17.0, accuracy: 0.01)
+        XCTAssertEqual(review6.intervalDays, 10, accuracy: 0.01)
 
         let evaluation7 = Evaluation(score: Score.recalled)
         let review7 = subject.nextReview(lastReview: review6, currentEvaluation: evaluation7)
         XCTAssertEqual(review7.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review7.numberOfCorrectReviewsInARow, 7)
-        XCTAssertEqual(review7.intervalDays, 41.0, accuracy: 0.01)
+        XCTAssertEqual(review7.intervalDays, 24, accuracy: 0.01)
 
         let evaluation8 = Evaluation(score: Score.recalled)
         let review8 = subject.nextReview(lastReview: review7, currentEvaluation: evaluation8)
         XCTAssertEqual(review8.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
-        XCTAssertEqual(review8.intervalDays, 97.0, accuracy: 0.01)
+        XCTAssertEqual(review8.intervalDays, 57, accuracy: 0.01)
 
 
     }
@@ -391,31 +391,31 @@ final class AnkiLikeTests: XCTestCase {
         let review4 = subject.nextReview(lastReview: review3, currentEvaluation: evaluation4)
         XCTAssertEqual(review4.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review4.numberOfCorrectReviewsInARow, 4)
-        XCTAssertEqual(review4.intervalDays, 3.0, accuracy: 0.01)
+        XCTAssertEqual(review4.intervalDays, 2, accuracy: 0.01)
         
         let evaluation5 = Evaluation(score: Score.recalled_but_difficult)
         let review5 = subject.nextReview(lastReview: review4, currentEvaluation: evaluation5)
         XCTAssertEqual(review5.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review5.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review5.intervalDays, 7.0, accuracy: 0.01)
+        XCTAssertEqual(review5.intervalDays, 3, accuracy: 0.01)
 
         let evaluation6 = Evaluation(score: Score.recalled_but_difficult)
         let review6 = subject.nextReview(lastReview: review5, currentEvaluation: evaluation6)
         XCTAssertEqual(review6.easeFactor, 2.08, accuracy: 0.005)
         XCTAssertEqual(review6.numberOfCorrectReviewsInARow, 6)
-        XCTAssertEqual(review6.intervalDays, 14.0, accuracy: 0.01)
+        XCTAssertEqual(review6.intervalDays, 4, accuracy: 0.01)
 
         let evaluation7 = Evaluation(score: Score.recalled_but_difficult)
         let review7 = subject.nextReview(lastReview: review6, currentEvaluation: evaluation7)
         XCTAssertEqual(review7.easeFactor, 1.94, accuracy: 0.005)
         XCTAssertEqual(review7.numberOfCorrectReviewsInARow, 7)
-        XCTAssertEqual(review7.intervalDays, 26.0, accuracy: 0.01)
+        XCTAssertEqual(review7.intervalDays, 5, accuracy: 0.01)
 
         let evaluation8 = Evaluation(score: Score.recalled_but_difficult)
         let review8 = subject.nextReview(lastReview: review7, currentEvaluation: evaluation8)
         XCTAssertEqual(review8.easeFactor, 1.8, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
-        XCTAssertEqual(review8.intervalDays, 43.0, accuracy: 0.01)
+        XCTAssertEqual(review8.intervalDays, 6, accuracy: 0.01)
     }
     
     func testScheduleWhereCardIsConsistentlyReviewedOkay() {
@@ -529,54 +529,54 @@ final class AnkiLikeTests: XCTestCase {
         let review4 = subject.nextReview(lastReview: review3, currentEvaluation: evaluation4)
         XCTAssertEqual(review4.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review4.numberOfCorrectReviewsInARow, 4)
-        XCTAssertEqual(review4.intervalDays, 3.0, accuracy: 0.01)
+        XCTAssertEqual(review4.intervalDays, 2, accuracy: 0.01)
 
         let evaluation5 = Evaluation(score: Score.recalled_but_difficult, lateness: -3.0)
         let review5 = subject.nextReview(lastReview: review4, currentEvaluation: evaluation5)
         XCTAssertEqual(review5.easeFactor, 2.22, accuracy: 0.005)
         XCTAssertEqual(review5.numberOfCorrectReviewsInARow, 5)
-        XCTAssertEqual(review5.intervalDays, 7.0, accuracy: 0.01)
+        XCTAssertEqual(review5.intervalDays, 3, accuracy: 0.01)
 
         let evaluation6 = Evaluation(score: Score.recalled_but_difficult, lateness: -5.0)
         let review6 = subject.nextReview(lastReview: review5, currentEvaluation: evaluation6)
         XCTAssertEqual(review6.easeFactor, 2.08, accuracy: 0.005)
         XCTAssertEqual(review6.numberOfCorrectReviewsInARow, 6)
-        XCTAssertEqual(review6.intervalDays, 14.0, accuracy: 0.01)
+        XCTAssertEqual(review6.intervalDays, 4, accuracy: 0.01)
 
         let evaluation7 = Evaluation(score: Score.recalled_but_difficult, lateness: -10.0)
         let review7 = subject.nextReview(lastReview: review6, currentEvaluation: evaluation7)
         XCTAssertEqual(review7.easeFactor, 1.94, accuracy: 0.005)
         XCTAssertEqual(review7.numberOfCorrectReviewsInARow, 7)
-        XCTAssertEqual(review7.intervalDays, 26.0, accuracy: 0.01)
+        XCTAssertEqual(review7.intervalDays, 5, accuracy: 0.01)
 
         let evaluation8 = Evaluation(score: Score.recalled_but_difficult)
         let review8 = subject.nextReview(lastReview: review7, currentEvaluation: evaluation8)
         XCTAssertEqual(review8.easeFactor, 1.8, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
-        XCTAssertEqual(review8.intervalDays, 43.0, accuracy: 0.01)
+        XCTAssertEqual(review8.intervalDays, 6, accuracy: 0.01)
 
         let evaluation9 = Evaluation(score: Score.recalled_but_difficult, lateness: -19.0)
         let review9 = subject.nextReview(lastReview: review8, currentEvaluation: evaluation9)
         XCTAssertEqual(review9.easeFactor, 1.66, accuracy: 0.005)
         XCTAssertEqual(review9.numberOfCorrectReviewsInARow, 9)
-        XCTAssertEqual(review9.intervalDays, 65.0, accuracy: 0.01)
+        XCTAssertEqual(review9.intervalDays, 8, accuracy: 0.01)
 
         let evaluation10 = Evaluation(score: Score.recalled_but_difficult, lateness: -28.0)
         let review10 = subject.nextReview(lastReview: review9, currentEvaluation: evaluation10)
         XCTAssertEqual(review10.easeFactor, 1.52, accuracy: 0.005)
         XCTAssertEqual(review10.numberOfCorrectReviewsInARow, 10)
-        XCTAssertEqual(review10.intervalDays, 90.0, accuracy: 0.01)
+        XCTAssertEqual(review10.intervalDays, 10, accuracy: 0.01)
 
         let evaluation11 = Evaluation(score: Score.recalled_but_difficult, lateness: -39.0)
         let review11 = subject.nextReview(lastReview: review10, currentEvaluation: evaluation11)
         XCTAssertEqual(review11.easeFactor, 1.38, accuracy: 0.005)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
-        XCTAssertEqual(review11.intervalDays, 117.0, accuracy: 0.01)
+        XCTAssertEqual(review11.intervalDays, 12, accuracy: 0.01)
 
         let evaluation12 = Evaluation(score: Score.recalled_but_difficult, lateness: -51.0)
         let review12 = subject.nextReview(lastReview: review11, currentEvaluation: evaluation12)
         XCTAssertEqual(review12.easeFactor, 1.3, accuracy: 0.005)
         XCTAssertEqual(review12.numberOfCorrectReviewsInARow, 12)
-        XCTAssertEqual(review12.intervalDays, 153.0, accuracy: 0.01)
+        XCTAssertEqual(review12.intervalDays, 15, accuracy: 0.01)
     }
 }

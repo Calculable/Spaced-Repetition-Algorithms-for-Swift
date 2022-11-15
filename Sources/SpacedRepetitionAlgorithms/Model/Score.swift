@@ -1,7 +1,7 @@
 /// The scoring system is based on 5-point scale and comes from SuperMemo’s SM-2 algorithm
 /// comments from https://www.freshcardsapp.com/srs/write-your-own-algorithm.html
-enum Score: Int {
-    
+enum Score: Int, Comparable, Equatable {
+
     /// 5 means the information was recalled easily
     case recalled_easily = 5
     
@@ -25,5 +25,9 @@ enum Score: Int {
             default:
                 return false
         }
+    }
+    
+    static func < (lhs: Score, rhs: Score) -> Bool {
+        return lhs.rawValue < rhs.rawValue
     }
 }

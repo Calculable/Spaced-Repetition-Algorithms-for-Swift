@@ -64,9 +64,10 @@ struct AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         
         // Reviewing phase
         if (currentEvaluation.score.wasRecalled()) {
+            //passed
             return max(EaseFactors.veryDifficult, lastReview.easeFactor + (0.1 - (5 - currentEvaluation.scoreValue) * (0.08+(5 - currentEvaluation.scoreValue)*0.02)))
         } else {
-            //passed
+            //failed
             return max(EaseFactors.veryDifficult, lastReview.easeFactor - 0.20)
         }
         
@@ -84,7 +85,7 @@ struct AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
             return daysFromMinutes(minutes: 1)
         }
         
-        if (currentEvaluation.scoreValue < 5) {
+        if (currentEvaluation.score < Score.recalled_easily) {
             switch lastReview.numberOfCorrectReviewsInARow {
             case 0: return daysFromMinutes(minutes: 1.0)
             case 1: return daysFromMinutes(minutes: 10.0)
@@ -98,17 +99,17 @@ struct AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
     fileprivate func latenessBonus(_ currentEvaluation: Evaluation, _ lastReview: Review) -> Double {
         let latenessValue = max(0, currentEvaluation.lateness * lastReview.intervalDays)
         
-        switch currentEvaluation.score.rawValue {
-            case 5: return latenessValue
-            case 4: return latenessValue / 2.0
-            default: return latenessValue / 4.0
+        switch currentEvaluation.score {
+        case .recalled_easily: return latenessValue
+        case .recalled: return latenessValue / 2.0
+        default: return latenessValue / 4.0
         }
     }
     
     fileprivate func calculateWorkingEFactor(_ score: Score, _ easeFactor: Double) -> Double {
-        switch score.rawValue {
-        case 3: return max(EaseFactors.veryDifficult, easeFactor - 0.15)
-        case 5: return max(1.3, easeFactor + 0.15)
+        switch score {
+        case .recalled_but_difficult: return max(EaseFactors.veryDifficult, easeFactor - 0.15)
+        case .recalled_easily: return max(1.3, easeFactor + 0.15)
         default: return easeFactor
         }
     }
@@ -123,6 +124,14 @@ struct AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         let latenessBonus = latenessBonus(currentEvaluation, lastReview)
         let workingEfactor = calculateWorkingEFactor(currentEvaluation.score, easeFactor)
         var interval = ceil((lastReview.intervalDays + latenessBonus) * workingEfactor)
+        
+        if (currentEvaluation.score == Score.recalled_but_difficult) {
+            //hard card. increase interval by 1.2 instead of whatever efactor was
+            //in some similar projects, this check is not implemented
+            //i am not sure if this is a bug in the other projects or if this line could actually be avoided
+            interval = ceil(lastReview.intervalDays * 1.2)
+        }
+        
             
         if (addFuzzyness) {
             // Add some proportional "fuzz" to interval to avoid bunching up reviews
