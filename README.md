@@ -100,7 +100,7 @@ let Review nextReview = spacedRepetitionAlgorithm.nextReview(lastReview: review,
 
 ### Fresh Cards Algorithm
 
-This algorithm is used for the app „flashcards“. It works similar like the Anki- and the SuperMemo2-algorithms. In addition, the lateness or earliness of a review is considered during the calculation of the next interval. The algorithm considers that it is easier to recall a learning unit if it is reviewed too early and more difficult if it is reviewed too late.
+This algorithm is used for the app „Fresh Cards“. It works similar like the Anki- and the SuperMemo2-algorithms. In addition, the lateness or earliness of a review is considered during the calculation of the next interval. The algorithm considers that it is easier to recall a learning unit if it is reviewed too early and more difficult if it is reviewed too late.
 
 Again, a bit of randomness is included to prevent that multiple flashcards get bunched together.
 

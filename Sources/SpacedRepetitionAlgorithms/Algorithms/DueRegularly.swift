@@ -1,10 +1,9 @@
 import Foundation
 
-// This is the simplest example of an SRS algorithm: An interval of 1.0 is used
-// to indicate that the card is due 1 day after the current review, regardless
-// of evaluation.score value.
+/// This algorithm always uses the same interval. The ease factor or the evaluation score is not considered.
 class DueRegularly: SpacedRepetitionAlgorithm {
     
+    /// The interval to use constantly
     let dueInterval: Double
     
     init(dueInterval: Double = 1) {
@@ -12,7 +11,8 @@ class DueRegularly: SpacedRepetitionAlgorithm {
     }
     
     internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
-        return EaseFactors.defaultEaseFactor
+        //This algorithm does not care about the ease factor so its just passed unchanged
+        return lastReview.easeFactor
     }
     
     internal func nextReviewInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {

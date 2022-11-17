@@ -1,17 +1,17 @@
 import Foundation
 
-// See https://www.supermemo.com/en/archives1990-2015/english/ol/sm2
+///This is one of the most well-known spaced repetition algorithms. The lateness of a review is not considered for this algorithm.
+/// See https://www.supermemo.com/en/archives1990-2015/english/ol/sm2
 class SM2: SpacedRepetitionAlgorithm {
     
     internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
-        let currentScore = currentEvaluation.scoreValue
-        let calculatedEaseFactor: Double = lastReview.easeFactor + (0.1 - (5 - currentScore) * (0.08+(5 - currentScore)*0.02))
+        let calculatedEaseFactor: Double = lastReview.easeFactor + (0.1 - (5 - currentEvaluation.scoreValue) * (0.08+(5 - currentEvaluation.scoreValue)*0.02))
         return max(EaseFactors.veryDifficult, calculatedEaseFactor)
     }
     
     internal func nextReviewInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if !currentEvaluation.score.wasRecalled() {
-            return 1 //the information was not recalled today, therefore the information should be revewed on the next day
+            return 1 //review again on the next day
         }
         
         switch lastReview.numberOfCorrectReviewsInARow {

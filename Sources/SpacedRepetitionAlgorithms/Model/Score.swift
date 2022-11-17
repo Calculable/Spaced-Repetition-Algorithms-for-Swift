@@ -1,23 +1,21 @@
-/// The scoring system is based on 5-point scale and comes from SuperMemo’s SM-2 algorithm
-/// comments from https://www.freshcardsapp.com/srs/write-your-own-algorithm.html
+/// The scoring system is based on 5-point scale and comes from SuperMemo’s SM-2 algorithm and is also used for the Anki-Like algorithm and the FreshCards algorithm.
 enum Score: Int, Comparable, Equatable {
 
-    /// 5 means the information was recalled easily
+    ///5 means that there was no difficulty to recall the learning unit
     case recalled_easily = 5
     
-    /// 4 means the information was recalled with a medium difficulty level
+    ///4 is the expected standard-value for a "normal review". Idealy the information unit should be recalled with no big difficulties but also require some amount of thinking.
     case recalled = 4
     
-    /// 3 means the information was recalled but it was difficult
+    ///3 means the information was recalled but it was difficult ("almost forgot")
     case recalled_but_difficult = 3
     
-    /// 2 means the information was not recalled but seeing the correct answer "sparked" the memory
+    /// 2 means the learning unit was almost recalled (= the correct answer does seem familiar)
     case not_recalled = 2
     
-    /// 1 means the information was not recalled and the answer looked very foreign
+    /// 1 means the information was not recalled. Also, the answer does not seem familiar.
     case not_recalled_and_difficult = 1
     
-    /// a score of 3 and higher means the information was recalled
     func wasRecalled() -> Bool {
         switch self {
             case Score.recalled_easily, Score.recalled, Score.recalled_but_difficult:
