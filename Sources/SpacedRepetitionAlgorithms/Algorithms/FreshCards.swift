@@ -1,6 +1,6 @@
 import Foundation
 
-struct FreshCards: SpacedRepetitionAlgorithm {
+class FreshCards: SpacedRepetitionAlgorithm {
         
     let addFuzzyness: Bool
     
@@ -85,11 +85,11 @@ struct FreshCards: SpacedRepetitionAlgorithm {
         var interval: Double
         
         if (!currentEvaluation.score.wasRecalled()) {
-            interval = daysFromMinutes(minutes: 30)
+            interval = numberOfDays(fromMinutes: 30)
         } else {
             switch lastReview.numberOfCorrectReviewsInARow {
             case 0:
-                interval = daysFromMinutes(minutes: 30)
+                interval = numberOfDays(fromMinutes: 30)
             case 1:
                 interval = 0.5 //12h
             default:
@@ -193,7 +193,7 @@ struct FreshCards: SpacedRepetitionAlgorithm {
         
         if (!currentEvaluation.score.wasRecalled()) {
             // Failed, so force re-review in 30 minutes and reset n count
-            interval = daysFromMinutes(minutes: 30)
+            interval = numberOfDays(fromMinutes: 30)
         } else {
             // Passed
             

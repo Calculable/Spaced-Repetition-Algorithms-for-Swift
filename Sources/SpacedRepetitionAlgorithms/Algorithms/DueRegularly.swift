@@ -3,7 +3,7 @@ import Foundation
 // This is the simplest example of an SRS algorithm: An interval of 1.0 is used
 // to indicate that the card is due 1 day after the current review, regardless
 // of evaluation.score value.
-struct DueRegularly: SpacedRepetitionAlgorithm {
+class DueRegularly: SpacedRepetitionAlgorithm {
     
     let dueInterval: Double
     

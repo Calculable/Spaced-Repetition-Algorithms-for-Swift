@@ -4,7 +4,7 @@ import Foundation
 /// Note: unlike a real system which reviews cards in each "box" when it becomes
 /// full, this just causes all cards to follow the 'ladder up' schedule above.
 /// On a failure, we start again from the top of the list.
-struct LeitnerSystem: SpacedRepetitionAlgorithm {
+class LeitnerSystem: SpacedRepetitionAlgorithm {
     
     let intervals: [Double] = [ 1, 3, 5, 10, 30 ]
     

@@ -1,7 +1,7 @@
 import Foundation
 
 // See https://www.supermemo.com/en/archives1990-2015/english/ol/sm2
-struct SM2: SpacedRepetitionAlgorithm {
+class SM2: SpacedRepetitionAlgorithm {
     
     internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         let currentScore = currentEvaluation.scoreValue
