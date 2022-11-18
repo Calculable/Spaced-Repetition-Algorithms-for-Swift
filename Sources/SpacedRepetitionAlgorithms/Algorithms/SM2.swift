@@ -15,9 +15,9 @@ public class SM2: SpacedRepetitionAlgorithm {
         }
         
         switch lastReview.numberOfCorrectReviewsInARow {
-            case 0: return 1
-            case 1: return 6
-            default: return ceil(Double(lastReview.intervalDays) * easeFactor)
+        case 0: return 1
+        case 1: return 6
+        default: return ceil(Double(lastReview.intervalDays) * easeFactor)
         }
     }
     

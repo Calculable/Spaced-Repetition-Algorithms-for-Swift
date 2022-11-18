@@ -10,7 +10,7 @@ public class LeitnerSystem: SpacedRepetitionAlgorithm {
     public init(intervals: [Double] = [ 1, 3, 5, 10, 30 ]) {
         self.intervals = intervals
     }
-
+    
     public func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         // the ease factor is irrelevant for this algorithm so it is just returned unchanged.
         return lastReview.easeFactor

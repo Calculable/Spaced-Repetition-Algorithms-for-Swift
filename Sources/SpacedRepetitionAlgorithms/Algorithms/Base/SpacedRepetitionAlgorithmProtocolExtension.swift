@@ -1,6 +1,6 @@
 /// Provides default implementations for the SpacedRepetitionAlgorithm protocol
 extension SpacedRepetitionAlgorithm {
-        
+    
     public func nextReview(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Review {
         let nextEaseFactor = nextEaseFactor(lastReview: lastReview, currentEvaluation: currentEvaluation)
         let newInterval = nextInterval(lastReview: lastReview, currentEvaluation: currentEvaluation, easeFactor: nextEaseFactor)

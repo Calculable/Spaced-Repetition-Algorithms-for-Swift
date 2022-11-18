@@ -1,6 +1,6 @@
 /// The scoring system is based on 5-point scale and comes from SuperMemo’s SM-2 algorithm and is also used for the Anki-Like algorithm and the FreshCards algorithm.
 public enum Score: Int, Comparable, Equatable {
-
+    
     ///5 means that there was no difficulty to recall the learning unit
     case recalled_easily = 5
     
@@ -18,10 +18,10 @@ public enum Score: Int, Comparable, Equatable {
     
     public func wasRecalled() -> Bool {
         switch self {
-            case Score.recalled_easily, Score.recalled, Score.recalled_but_difficult:
-                return true
-            default:
-                return false
+        case Score.recalled_easily, Score.recalled, Score.recalled_but_difficult:
+            return true
+        default:
+            return false
         }
     }
     
