@@ -1,16 +1,16 @@
 import Foundation
 
 ///This algorithm is used for the app „Fresh Cards“. It works similar like the Anki- and the SuperMemo2-algorithms. The lateness or earliness of a review is considered during the calculation of the next interval. The algorithm considers that it is easier to recall a learning unit if it is reviewed too early and more difficult if it is reviewed too late. A bit of randomness is included to prevent that multiple flashcards get bunched together. Compared to anki, the initial intervals are longer. Original Source in JavaScript: https://www.freshcardsapp.com/srs/simulator/
-class FreshCards: SpacedRepetitionAlgorithm {
+public class FreshCards: SpacedRepetitionAlgorithm {
         
     /// Controls wether a random value should be added to the time intervals. If this option is turned on, it prevents that the same learning units are always "grouped" together.
-    let addFuzzyness: Bool
+    public let addFuzzyness: Bool
     
-    init(addFuzzyness: Bool = false) {
+    public init(addFuzzyness: Bool = false) {
         self.addFuzzyness = addFuzzyness
     }
     
-    internal func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if (lastReview.isInLearningPhase) {
             return nextIntervalForLearningPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
         } else {
@@ -18,7 +18,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
         }
     }
     
-    internal func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
+    public func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         if (lastReview.isInLearningPhase) {
             return lastReview.easeFactor // the ease factor is not changed during the learning phase
         }
@@ -35,7 +35,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
         }
     }
     
-    fileprivate func nextIntervalForLearningPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func nextIntervalForLearningPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         var interval: Double
         
         if (currentEvaluation.score.wasRecalled()) {
@@ -52,7 +52,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
         return interval
     }
     
-    fileprivate func nextIntervalForReviewPhase(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    private func nextIntervalForReviewPhase(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         var interval: Double
         
         if (currentEvaluation.score.wasRecalled()) {
@@ -69,7 +69,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
         return interval
     }
     
-    fileprivate func nextIntervalForNonEarlyReview(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    private func nextIntervalForNonEarlyReview(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         var intervalAdjustment = 1.0
         
         if (currentEvaluation.lateness < 0.10 && currentEvaluation.score >= Score.recalled_but_difficult && currentEvaluation.score < Score.recalled) {
@@ -87,7 +87,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
     }
     
     
-    fileprivate func nextIntervalForEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func nextIntervalForEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         let futureWeight = futureWeight(currentEvaluation: currentEvaluation)
         let currentWeight = 1.0 - futureWeight
         let futureEasefactor = futureEaseFactor(lastReview: lastReview, currentEvaluation: currentEvaluation, futureWeight: futureWeight)
@@ -110,7 +110,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
         return originalValue
     }
     
-    fileprivate func futureWeight(currentEvaluation: Evaluation) -> Double {
+    private func futureWeight(currentEvaluation: Evaluation) -> Double {
         let normalizedEarliness = (1.0 + currentEvaluation.lateness)
         
         //put the value into a curved function:
@@ -118,7 +118,7 @@ class FreshCards: SpacedRepetitionAlgorithm {
         return futureWeight
     }
     
-    fileprivate func futureEaseFactor(lastReview: Review, currentEvaluation: Evaluation, futureWeight: Double) -> Double {
+    private func futureEaseFactor(lastReview: Review, currentEvaluation: Evaluation, futureWeight: Double) -> Double {
         let currentWeight = 1.0 - futureWeight
 
         // The score is extrapolated to the future. The algorithm predicts what the future score is likely to be (it assumes that the score will decrease since it is harder to recall "older" learning units)
@@ -129,14 +129,14 @@ class FreshCards: SpacedRepetitionAlgorithm {
         
     }
     
-    fileprivate func nextEaseFactorForEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func nextEaseFactorForEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         let futureWeight = futureWeight(currentEvaluation: currentEvaluation)
         let currentWeight = 1.0 - futureWeight
         let futureEasefactor = futureEaseFactor(lastReview: lastReview, currentEvaluation: currentEvaluation, futureWeight: futureWeight)
         return lastReview.easeFactor * currentWeight + futureEasefactor * futureWeight
     }
     
-    fileprivate func nextEaseFactorForNonEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func nextEaseFactorForNonEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         var latenessScoreBonus = 0.0
 
         if (currentEvaluation.lateness >= 0.10 && currentEvaluation.score.wasRecalled()) {

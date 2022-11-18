@@ -1,14 +1,14 @@
 /// Contains information about the next proposed review. The main information is the day-interval (= a succestion when the next review session should be).
-struct Review {
+public struct Review {
     
     /// days since the last review or until the next review
-    let intervalDays: Double
+    public let intervalDays: Double
     
     /// how many reviews in a row was the information recalled successfully
-    let numberOfCorrectReviewsInARow: Int
+    public let numberOfCorrectReviewsInARow: Int
     
     /// stores the difficulty to recall a learning unit. See struct EaseFactors for example values. Usually between 1.3 (very difficult to recall) and 2.5 (very easy to recall)
-    let easeFactor: Double
+    public let easeFactor: Double
     
     
     /// A learning unit is considered to be in the "learning" phase if the information unit was not successfully recalled for three times in a row lately
@@ -21,13 +21,13 @@ struct Review {
         !isInLearningPhase
     }
     
-    init(intervalDays: Double, numberOfCorrectReviewsInARow: Int, easeFactor: Double) {
+    public init(intervalDays: Double, numberOfCorrectReviewsInARow: Int, easeFactor: Double) {
         self.intervalDays = intervalDays
         self.numberOfCorrectReviewsInARow = numberOfCorrectReviewsInARow
         self.easeFactor = easeFactor
     }
     
-    init() {
+    public init() {
         self.init(intervalDays: 0.0, numberOfCorrectReviewsInARow: 0, easeFactor: EaseFactors.defaultEaseFactor)
     }
 }

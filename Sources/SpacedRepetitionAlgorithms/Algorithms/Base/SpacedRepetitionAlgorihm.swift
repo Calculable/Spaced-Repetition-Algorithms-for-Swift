@@ -1,5 +1,5 @@
 ///Spaced repetition algorithms are often used in flashcard apps. The algorithms calculate how long the optimal time interval between two reviews for a learning unit should be. The calculation is based on the user's feedback on how easy or difficult the last review was perceived. Normally, the time interval increases the more often a learning unit has been successfully recalled. Frequent repetitions cause the memory curve to decrease slower. If a learning content cannot be recalled, the time intervals between reviews will become shorter again.
-protocol SpacedRepetitionAlgorithm {
+public protocol SpacedRepetitionAlgorithm {
     
     
     /// Calculates when the next review should be for a learning unit

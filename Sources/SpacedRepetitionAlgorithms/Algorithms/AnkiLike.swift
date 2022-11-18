@@ -2,17 +2,17 @@ import Foundation
 
 /// This algorithm is similar to the algorithm used in the popular flashcards app "Anki".
 /// Compared to other algorithms, the initial reviews are shorter. The algorithm differentiates between the initial "learning" phase and the "reviewing" phase. During the learning phase, the ease factor is not changed. The algorithm considers how "late" or "early" a card is reviewed. If a card is reviewed late but the answer was still right, the timespan of the next interval is further increased. On the other hand, if a card is reviewed to early, the timeinerval isn't increased as much as when the card is reviewed on time. A random value is added to the resulting interval to avoid that the same learning reviewes are always grouped together.
-class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
+public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         
     
     /// Controls wether a random value should be added to the time intervals. If this option is turned on, it prevents that the same learning units are always "grouped" together.
-    let addFuzzyness: Bool
+    public let addFuzzyness: Bool
 
-    init(addFuzzyness: Bool = false) {
+    public init(addFuzzyness: Bool = false) {
         self.addFuzzyness = addFuzzyness
     }
     
-    internal func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if (lastReview.isInLearningPhase) {
             return nextIntervalForLearningPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
         } else {
@@ -20,7 +20,7 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         }
     }
     
-    internal func nextEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    public func nextEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         if (lastReview.isInLearningPhase) {
             return nextEaseFactorForLearningPhase(lastReview: lastReview)
         }
@@ -28,7 +28,7 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         return nextEaseFactorForReviewPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
     }
     
-    fileprivate func nextIntervalForLearningPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func nextIntervalForLearningPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         switch currentEvaluation.score {
         case .recalled_easily: return 4
         case .recalled, .recalled_but_difficult:
@@ -42,7 +42,7 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         }
     }
     
-    fileprivate func nextIntervalForReviewingPhase(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    private func nextIntervalForReviewingPhase(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         
         if (!currentEvaluation.score.wasRecalled()) {
             return numberOfDays(fromMinutes: 1.0)
@@ -65,7 +65,7 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
             
     }
     
-    fileprivate func latenessBonus(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func latenessBonus(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         // if a review was dont later than expected but the information was still recalled, a "bonus" is added to the interval because it is assumed to be more difficult to recall a learning unit after a longer period of time
         
         let latenessValue = max(0, currentEvaluation.lateness * lastReview.intervalDays)
@@ -96,7 +96,7 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         return Double.random(in: 0..<1) * fuzzRange - fuzzRange * 0.5
     }
     
-    fileprivate func nextEaseFactorForReviewPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    private func nextEaseFactorForReviewPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         // Reviewing phase
         if (currentEvaluation.score.wasRecalled()) {
             //passed
@@ -107,11 +107,11 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         }
     }
     
-    fileprivate func nextEaseFactorForLearningPhase(lastReview: Review) -> Double {
+    private func nextEaseFactorForLearningPhase(lastReview: Review) -> Double {
         return lastReview.easeFactor
     }
     
-    fileprivate func calculateWorkingEaseFactor(score: Score, easeFactor: Double) -> Double {
+    private func calculateWorkingEaseFactor(score: Score, easeFactor: Double) -> Double {
         
         //The working efactor is used for the calculation of the new timeinterval
         switch score {
