@@ -80,8 +80,6 @@ final class AnkiLikeTests: XCTestCase {
         XCTAssertEqual(review11.easeFactor, 1.94, accuracy: 0.005)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
         XCTAssertEqual(review11.intervalDays, 231, accuracy: 0.01)
-        
-        
     }
     
     
@@ -269,7 +267,6 @@ final class AnkiLikeTests: XCTestCase {
         XCTAssertEqual(review11.easeFactor, 1.94, accuracy: 0.005)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
         XCTAssertEqual(review11.intervalDays, 5250, accuracy: 0.01)
-        
     }
     
     func testScheduleWhereCardsAreReviewedTooEarly() {
@@ -364,8 +361,6 @@ final class AnkiLikeTests: XCTestCase {
         XCTAssertEqual(review8.easeFactor, 2.36, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
         XCTAssertEqual(review8.intervalDays, 57, accuracy: 0.01)
-        
-        
     }
     
     func testScheduleWhereCardIsConsistentlyHard() {

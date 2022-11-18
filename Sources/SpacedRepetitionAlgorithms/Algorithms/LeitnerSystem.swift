@@ -16,12 +16,10 @@ public class LeitnerSystem: SpacedRepetitionAlgorithm {
         return lastReview.easeFactor
     }
     
-    
     public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if !currentEvaluation.score.wasRecalled() {
             return 1
         }
         return intervals[min(lastReview.numberOfCorrectReviewsInARow, intervals.count-1)] //"move" the learning unit to the next "box"
     }
-    
 }

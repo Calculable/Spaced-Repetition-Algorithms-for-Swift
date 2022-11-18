@@ -93,7 +93,6 @@ final class SM2Tests: XCTestCase {
         XCTAssertEqual(review11.intervalDays, 6749, accuracy: 0.000000001)
     }
     
-    
     func testScheduleWithEventualLapses() {
         let evaluation1 = Evaluation(score: Score.recalled_but_difficult)
         let review1 = subject.nextReview(currentEvaluation: evaluation1)

@@ -80,9 +80,7 @@ final class FreshCardsTests: XCTestCase {
         XCTAssertEqual(review11.easeFactor, 1.94, accuracy: 0.000000001)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
         XCTAssertEqual(review11.intervalDays, 243, accuracy: 0.000000001)
-        
     }
-    
     
     func testScheduleWithEventualLapses() {
         let evaluation1 = Evaluation(score: Score.recalled_but_difficult)
@@ -268,7 +266,6 @@ final class FreshCardsTests: XCTestCase {
         XCTAssertEqual(review11.easeFactor, 2.25, accuracy: 0.005)
         XCTAssertEqual(review11.numberOfCorrectReviewsInARow, 11)
         XCTAssertEqual(review11.intervalDays, 864.0, accuracy: 0.01)
-        
     }
     
     func testScheduleWhereCardsAreReviewedTooEarly() {
@@ -363,7 +360,6 @@ final class FreshCardsTests: XCTestCase {
         XCTAssertEqual(review8.easeFactor, 2.4, accuracy: 0.005)
         XCTAssertEqual(review8.numberOfCorrectReviewsInARow, 8)
         XCTAssertEqual(review8.intervalDays, 87.0, accuracy: 0.01)
-        
     }
     
     func testScheduleWhereCardIsConsistentlyHard() {

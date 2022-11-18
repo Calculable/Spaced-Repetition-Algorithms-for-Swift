@@ -18,5 +18,4 @@ public class DueRegularly: SpacedRepetitionAlgorithm {
     public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         return dueInterval
     }
-    
 }

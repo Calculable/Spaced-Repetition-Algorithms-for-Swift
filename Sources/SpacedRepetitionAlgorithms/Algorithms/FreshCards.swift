@@ -86,7 +86,6 @@ public class FreshCards: SpacedRepetitionAlgorithm {
         }
     }
     
-    
     private func nextIntervalForEarlyReview(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         let futureWeight = futureWeight(currentEvaluation: currentEvaluation)
         let currentWeight = 1.0 - futureWeight

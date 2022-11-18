@@ -4,7 +4,6 @@ import Foundation
 /// Compared to other algorithms, the initial reviews are shorter. The algorithm differentiates between the initial "learning" phase and the "reviewing" phase. During the learning phase, the ease factor is not changed. The algorithm considers how "late" or "early" a card is reviewed. If a card is reviewed late but the answer was still right, the timespan of the next interval is further increased. On the other hand, if a card is reviewed to early, the timeinerval isn't increased as much as when the card is reviewed on time. A random value is added to the resulting interval to avoid that the same learning reviewes are always grouped together.
 public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
     
-    
     /// Controls wether a random value should be added to the time intervals. If this option is turned on, it prevents that the same learning units are always "grouped" together.
     public let addFuzzyness: Bool
     
@@ -43,7 +42,6 @@ public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
     }
     
     private func nextIntervalForReviewingPhase(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
-        
         if (!currentEvaluation.score.wasRecalled()) {
             return numberOfDays(fromMinutes: 1.0)
         }
@@ -62,12 +60,10 @@ public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         }
         
         return interval
-        
     }
     
     private func latenessBonus(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         // if a review was dont later than expected but the information was still recalled, a "bonus" is added to the interval because it is assumed to be more difficult to recall a learning unit after a longer period of time
-        
         let latenessValue = max(0, currentEvaluation.lateness * lastReview.intervalDays)
         
         switch currentEvaluation.score {
