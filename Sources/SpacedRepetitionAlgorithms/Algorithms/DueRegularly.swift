@@ -10,12 +10,12 @@ class DueRegularly: SpacedRepetitionAlgorithm {
         self.dueInterval = dueInterval
     }
     
-    internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
+    internal func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         //This algorithm does not care about the ease factor so its just passed unchanged
         return lastReview.easeFactor
     }
     
-    internal func nextReviewInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    internal func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         return dueInterval
     }
     

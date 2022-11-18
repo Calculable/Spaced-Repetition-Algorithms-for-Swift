@@ -12,8 +12,72 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         self.addFuzzyness = addFuzzyness
     }
     
+    internal func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+        if (lastReview.isInLearningPhase) {
+            return nextIntervalForLearningPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
+        } else {
+            return nextIntervalForReviewingPhase(lastReview: lastReview, currentEvaluation: currentEvaluation, easeFactor: easeFactor)
+        }
+    }
     
-    private func fuzzForInterval(interval: Double) -> Double {
+    internal func nextEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+        if (lastReview.isInLearningPhase) {
+            return nextEaseFactorForLearningPhase(lastReview: lastReview)
+        }
+        
+        return nextEaseFactorForReviewPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
+    }
+    
+    fileprivate func nextIntervalForLearningPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+        switch currentEvaluation.score {
+        case .recalled_easily: return 4
+        case .recalled, .recalled_but_difficult:
+            switch lastReview.numberOfCorrectReviewsInARow { //card was recalled but not recalled easily
+                case 0: return numberOfDays(fromMinutes: 1.0)
+                case 1: return numberOfDays(fromMinutes: 10.0)
+                default: return 1.0
+            }
+        case .not_recalled: return numberOfDays(fromMinutes: 1)
+        case .not_recalled_and_difficult: return numberOfDays(fromMinutes: 1)
+        }
+    }
+    
+    fileprivate func nextIntervalForReviewingPhase(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+        
+        if (!currentEvaluation.score.wasRecalled()) {
+            return numberOfDays(fromMinutes: 1.0)
+        }
+
+        let latenessBonus = latenessBonus(lastReview: lastReview, currentEvaluation: currentEvaluation)
+        let workingEaseFactor = calculateWorkingEaseFactor(score: currentEvaluation.score, easeFactor: easeFactor)
+        var interval = ceil((lastReview.intervalDays + latenessBonus) * workingEaseFactor)
+        
+        if (currentEvaluation.score == Score.recalled_but_difficult) {
+            //if the information unit was recalled but still difficult, the interval is just increased by 1.2 - the value of the working ease factor is ignored in this case.
+            interval = ceil(lastReview.intervalDays * 1.2)
+        }
+                    
+        if (addFuzzyness) {
+            interval += fuzz(forInterval: interval)
+        }
+            
+        return interval
+            
+    }
+    
+    fileprivate func latenessBonus(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+        // if a review was dont later than expected but the information was still recalled, a "bonus" is added to the interval because it is assumed to be more difficult to recall a learning unit after a longer period of time
+        
+        let latenessValue = max(0, currentEvaluation.lateness * lastReview.intervalDays)
+        
+        switch currentEvaluation.score {
+        case .recalled_easily: return latenessValue
+        case .recalled: return latenessValue / 2.0
+        default: return latenessValue / 4.0
+        }
+    }
+    
+    private func fuzz(forInterval interval: Double) -> Double {
         var fuzzRange: Double
         
         switch interval {
@@ -32,7 +96,7 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         return Double.random(in: 0..<1) * fuzzRange - fuzzRange * 0.5
     }
     
-    fileprivate func nextEaseFactorForReviewPhase(_ currentEvaluation: Evaluation, _ lastReview: Review) -> Double {
+    fileprivate func nextEaseFactorForReviewPhase(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         // Reviewing phase
         if (currentEvaluation.score.wasRecalled()) {
             //passed
@@ -43,85 +107,17 @@ class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         }
     }
     
-    fileprivate func nextEaseFactorForLearningPhase(_ lastReview: Review) -> Double {
+    fileprivate func nextEaseFactorForLearningPhase(lastReview: Review) -> Double {
         return lastReview.easeFactor
     }
     
-    internal func nextReviewEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double {
-        if (lastReview.isInLearningPhase) {
-            return nextEaseFactorForLearningPhase(lastReview)
-        }
-        
-        return nextEaseFactorForReviewPhase(currentEvaluation, lastReview)
-    }
-
-    
-    
-    fileprivate func nextReviewIntervalForLearningPhase(_ currentEvaluation: Evaluation, _ lastReview: Review) -> Double {
-        switch currentEvaluation.score {
-        case .recalled_easily: return 4
-        case .recalled, .recalled_but_difficult:
-            switch lastReview.numberOfCorrectReviewsInARow { //card was recalled but not recalled easily
-                case 0: return numberOfDays(fromMinutes: 1.0)
-                case 1: return numberOfDays(fromMinutes: 10.0)
-                default: return 1.0
-            }
-        case .not_recalled: return numberOfDays(fromMinutes: 1)
-        case .not_recalled_and_difficult: return numberOfDays(fromMinutes: 1)
-        }
-    }
-    
-    fileprivate func latenessBonus(_ currentEvaluation: Evaluation, _ lastReview: Review) -> Double {
-        // if a review was dont later than expected but the information was still recalled, a "bonus" is added to the interval because it is assumed to be more difficult to recall a learning unit after a longer period of time
-        
-        let latenessValue = max(0, currentEvaluation.lateness * lastReview.intervalDays)
-        
-        switch currentEvaluation.score {
-        case .recalled_easily: return latenessValue
-        case .recalled: return latenessValue / 2.0
-        default: return latenessValue / 4.0
-        }
-    }
-    
-    fileprivate func calculateWorkingEaseFactor(_ score: Score, _ easeFactor: Double) -> Double {
+    fileprivate func calculateWorkingEaseFactor(score: Score, easeFactor: Double) -> Double {
         
         //The working efactor is used for the calculation of the new timeinterval
         switch score {
         case .recalled_but_difficult: return max(EaseFactors.veryDifficult, easeFactor - 0.15)
         case .recalled_easily: return max(1.3, easeFactor + 0.15)
         default: return easeFactor
-        }
-    }
-    
-    
-    fileprivate func nextReviewIntervalForReviewingPhase(_ currentEvaluation: Evaluation, _ lastReview: Review, _ easeFactor: Double) -> Double {
-        
-        if (!currentEvaluation.score.wasRecalled()) {
-            return numberOfDays(fromMinutes: 1.0)
-        }
-
-        let latenessBonus = latenessBonus(currentEvaluation, lastReview)
-        let workingEaseFactor = calculateWorkingEaseFactor(currentEvaluation.score, easeFactor)
-        var interval = ceil((lastReview.intervalDays + latenessBonus) * workingEaseFactor)
-        
-        if (currentEvaluation.score == Score.recalled_but_difficult) {
-            //if the information unit was recalled but still difficult, the interval is just increased by 1.2 - the value of the working ease factor is ignored in this case.
-            interval = ceil(lastReview.intervalDays * 1.2)
-        }
-                    
-        if (addFuzzyness) {
-            interval += fuzzForInterval(interval: interval)
-        }
-            
-        return interval
-            
-    }
-    
-    internal func nextReviewInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
-        if (lastReview.isInLearningPhase) {
-            return nextReviewIntervalForLearningPhase(currentEvaluation, lastReview)
-        } else {
-            return nextReviewIntervalForReviewingPhase(currentEvaluation, lastReview, easeFactor)
         }
     }
     

@@ -15,14 +15,14 @@ protocol SpacedRepetitionAlgorithm {
     ///   - lastReview: The previous review for a learning unit.
     ///   - currentEvaluation: The evaluation for the same learning unit.
     /// - Returns: The new ease factor. The heigher the ease factor, the "easier" a learning unit is assumed to be.
-    func nextReviewEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double
+    func nextEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double
     
     /// Calculates the new review interval (in days) for a learning unit based on the user's latest ealuation.
     /// - Parameters:
     ///   - lastReview: The previous review for a learning unit.
     ///   - currentEvaluation: The evaluation for the same learning unit.
     /// - Returns: next review interval in days. The result is not always a full day, for example, 0.5 means "12 hours". This value indicates the time duration the algorithm succests until the user should review the same learning unit again.
-    func nextReviewInterval(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double
+    func nextInterval(lastReview: Review, currentEvaluation: Evaluation, easeFactor: Double) -> Double
     
     
     /// Calculates the amount of "correct" reviews in a row. "Correct" means that the information was recalled (score >= 3) during an evaluation. If the learning unit is not recalled during a review, this value is reset to 0.
@@ -30,5 +30,5 @@ protocol SpacedRepetitionAlgorithm {
     ///   - lastReview: The previous review for a learning unit.
     ///   - currentEvaluation: The evaluation for the same learning unit.
     /// - Returns: The amount of times in a row where the learning unit was "recalled".
-    func nextReviewNumberOfCorrectReviewsInARow(lastReview: Review, currentEvaluation: Evaluation) -> Int
+    func nextNumberOfCorrectReviewsInARow(lastReview: Review, currentEvaluation: Evaluation) -> Int
 }

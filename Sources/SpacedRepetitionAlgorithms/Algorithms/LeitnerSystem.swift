@@ -11,14 +11,13 @@ class LeitnerSystem: SpacedRepetitionAlgorithm {
         self.intervals = intervals
     }
 
-    
-    internal func nextReviewEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
+    internal func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         // the ease factor is irrelevant for this algorithm so it is just returned unchanged.
         return lastReview.easeFactor
     }
     
     
-    internal func nextReviewInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    internal func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if !currentEvaluation.score.wasRecalled() {
             return 1
         }
