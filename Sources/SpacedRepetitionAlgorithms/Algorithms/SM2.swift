@@ -4,6 +4,8 @@ import Foundation
 /// See https://www.supermemo.com/en/archives1990-2015/english/ol/sm2
 public class SM2: SpacedRepetitionAlgorithm {
     
+    public init() {} //default initializer is internal by default
+
     public func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         let calculatedEaseFactor: Double = lastReview.easeFactor + (0.1 - (5 - currentEvaluation.scoreValue) * (0.08+(5 - currentEvaluation.scoreValue)*0.02))
         return max(EaseFactors.veryDifficult, calculatedEaseFactor)
