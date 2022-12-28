@@ -2,7 +2,7 @@ import Foundation
 
 ///The Leitner System is a straightforward spaced repetition system from 1970. This system is often used with physical flashcards. The physical version requires several boxes to put the cards in. Cards in the first box are repeated every day, cards in the second box are repeated every 3 days, cards in the third box are repeated every 5 days and so on. If a card is recalled correctly during a review, it is promoted to the next box. If a card is not recalled during the review, it is moved back to the previous box. This algorithm rebuilds the leitner system in software. The intervals are configurable. The lateness of a review is not considered for this algorithm.
 ///Note: Currently, learning units stay in the last box "forever"
-public class LeitnerSystem: SpacedRepetitionAlgorithm {
+open class LeitnerSystem: SpacedRepetitionAlgorithm {
     
     ///the intervals (in days) for the different "boxes".
     public let intervals: [Double]
@@ -11,12 +11,12 @@ public class LeitnerSystem: SpacedRepetitionAlgorithm {
         self.intervals = intervals
     }
     
-    public func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
+    open func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         // the ease factor is irrelevant for this algorithm so it is just returned unchanged.
         return lastReview.easeFactor
     }
     
-    public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    open func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if !currentEvaluation.score.wasRecalled() {
             return 1
         }

@@ -1,7 +1,7 @@
 import Foundation
 
 ///This algorithm is used for the app „Fresh Cards“. It works similar like the Anki- and the SuperMemo2-algorithms. The lateness or earliness of a review is considered during the calculation of the next interval. The algorithm considers that it is easier to recall a learning unit if it is reviewed too early and more difficult if it is reviewed too late. A bit of randomness is included to prevent that multiple flashcards get bunched together. Compared to anki, the initial intervals are longer. Original Source in JavaScript: https://www.freshcardsapp.com/srs/simulator/
-public class FreshCards: SpacedRepetitionAlgorithm {
+open class FreshCards: SpacedRepetitionAlgorithm {
     
     /// Controls wether a random value should be added to the time intervals. If this option is turned on, it prevents that the same learning units are always "grouped" together.
     public let addFuzzyness: Bool
@@ -10,7 +10,7 @@ public class FreshCards: SpacedRepetitionAlgorithm {
         self.addFuzzyness = addFuzzyness
     }
     
-    public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    open func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if (lastReview.isInLearningPhase) {
             return nextIntervalForLearningPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
         } else {
@@ -18,7 +18,7 @@ public class FreshCards: SpacedRepetitionAlgorithm {
         }
     }
     
-    public func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
+    open func nextEaseFactor(lastReview: Review = Review(), currentEvaluation: Evaluation) -> Double {
         if (lastReview.isInLearningPhase) {
             return lastReview.easeFactor // the ease factor is not changed during the learning phase
         }

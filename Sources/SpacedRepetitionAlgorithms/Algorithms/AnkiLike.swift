@@ -2,7 +2,7 @@ import Foundation
 
 /// This algorithm is similar to the algorithm used in the popular flashcards app "Anki".
 /// Compared to other algorithms, the initial reviews are shorter. The algorithm differentiates between the initial "learning" phase and the "reviewing" phase. During the learning phase, the ease factor is not changed. The algorithm considers how "late" or "early" a card is reviewed. If a card is reviewed late but the answer was still right, the timespan of the next interval is further increased. On the other hand, if a card is reviewed to early, the timeinerval isn't increased as much as when the card is reviewed on time. A random value is added to the resulting interval to avoid that the same learning reviewes are always grouped together.
-public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
+open class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
     
     /// Controls wether a random value should be added to the time intervals. If this option is turned on, it prevents that the same learning units are always "grouped" together.
     public let addFuzzyness: Bool
@@ -11,7 +11,7 @@ public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         self.addFuzzyness = addFuzzyness
     }
     
-    public func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
+    open func nextInterval(lastReview: Review = Review(), currentEvaluation: Evaluation, easeFactor: Double) -> Double {
         if (lastReview.isInLearningPhase) {
             return nextIntervalForLearningPhase(lastReview: lastReview, currentEvaluation: currentEvaluation)
         } else {
@@ -19,7 +19,7 @@ public class AnkiLikeAlgorithm: SpacedRepetitionAlgorithm {
         }
     }
     
-    public func nextEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double {
+    open func nextEaseFactor(lastReview: Review, currentEvaluation: Evaluation) -> Double {
         if (lastReview.isInLearningPhase) {
             return nextEaseFactorForLearningPhase(lastReview: lastReview)
         }
